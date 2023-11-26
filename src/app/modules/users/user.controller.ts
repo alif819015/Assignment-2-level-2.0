@@ -3,12 +3,25 @@ import { UserServices } from './user.service';
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const user = req.body.user;
-    const result = await UserServices.createUserIntoDb(user);
+    const { user: userData } = req.body;
+    const result = await UserServices.createUserIntoDb(userData);
 
     res.status(200).json({
       success: true,
-      message: 'User is created successfully',
+      message: 'User is Created Successfully',
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getAllUser = async (req: Request, res: Response) => {
+  try {
+    const result = await UserServices.getAllUserFromDB();
+    res.status(200).json({
+      success: true,
+      message: 'User are Retrieved Successfully',
       data: result,
     });
   } catch (error) {
@@ -18,4 +31,5 @@ const createUser = async (req: Request, res: Response) => {
 
 export const UserController = {
   createUser,
+  getAllUser,
 };
