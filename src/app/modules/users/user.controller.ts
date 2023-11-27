@@ -11,8 +11,12 @@ const createUser = async (req: Request, res: Response) => {
       message: 'User is Created Successfully',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message: err.message || 'Something went Wrong',
+      error: err,
+    });
   }
 };
 
@@ -24,8 +28,12 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: 'Users are Retrieved Successfully',
       data: result,
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message: err.message || 'User not found!',
+      error: err,
+    });
   }
 };
 
@@ -38,11 +46,11 @@ const getSingleUser = async (req: Request, res: Response) => {
       message: 'User are Retrieved Successfully',
       data: result,
     });
-  } catch (error) {
-    res.status(400).json({
+  } catch (err: any) {
+    res.status(404).json({
       success: false,
-      message: 'User not found',
-      data: error,
+      message: err.message || 'User not found!',
+      error: err,
     });
   }
 };
