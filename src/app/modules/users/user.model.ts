@@ -9,10 +9,10 @@ const userSchema = new Schema<User>({
     lastName: { type: String, required: true },
   },
   age: { type: Number, required: true },
-  gender: ['male', 'female'],
+  gender: { type: String, enum: ['male', 'female'], required: true },
   email: { type: String, required: true },
   isActive: { type: Boolean, required: true },
-  hobbies: ['Sports', 'Cording'],
+  hobbies: { type: [String], enum: ['Sports', 'Cording'] },
   address: {
     street: { type: String, required: true },
     city: { type: String, required: true },
@@ -20,7 +20,6 @@ const userSchema = new Schema<User>({
   },
   orders: {
     type: [{ productName: String, price: Number, quantity: Number }],
-    required: true,
   },
 });
 

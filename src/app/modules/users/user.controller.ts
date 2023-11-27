@@ -39,7 +39,11 @@ const getSingleUser = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    res.status(400).json({
+      success: false,
+      message: 'User not found',
+      data: error,
+    });
   }
 };
 
