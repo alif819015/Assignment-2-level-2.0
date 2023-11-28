@@ -17,7 +17,7 @@ export type User = {
   gender: 'male' | 'female';
   email: string;
   isActive: boolean;
-  hobbies: ['Sports', 'Cording'];
+  hobbies: 'Sports' | 'Cording';
   address: {
     street: string;
     city: string;
