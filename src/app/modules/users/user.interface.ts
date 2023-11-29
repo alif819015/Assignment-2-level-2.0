@@ -8,6 +8,7 @@ export type Orders = {
 
 export type User = {
   id: string;
+  userId: number;
   username: string;
   fullName: {
     firstName: string;

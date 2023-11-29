@@ -8,6 +8,11 @@ const userSchema = new Schema<User>({
     required: [true, 'ID is required'],
     unique: true,
   },
+  userId: {
+    type: Number,
+    required: [true, 'ID is required'],
+    unique: true,
+  },
   username: {
     type: String,
     required: [true, 'Username is required'],

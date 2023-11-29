@@ -43,7 +43,8 @@ const getAllUsers = async (req: Request, res: Response) => {
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const result = await UserServices.getSingleUserFromDB(userId);
+    const userIdConvert = parseInt(userId);
+    const result = await UserServices.getSingleUserFromDB(userIdConvert);
     res.status(200).json({
       success: true,
       message: 'User are Retrieved Successfully',
