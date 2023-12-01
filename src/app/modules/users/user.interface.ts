@@ -1,5 +1,3 @@
-// import { Schema, model, connect } from 'mongoose';
-
 import { Model } from 'mongoose';
 
 export type TOrders = {
@@ -28,14 +26,9 @@ export type TUser = {
     country: string;
   };
   orders?: TOrders[];
+  isDeleted: boolean;
 };
 
 export interface UserModel extends Model<TUser> {
   isUserExists(userId: number): Promise<TUser | null>;
 }
-
-// export type userMethods = {
-//   isUserExists(userId: number): Promise<TUser | null>;
-// };
-
-// export type UserModel = Model<TUser, Record<string, never>, userMethods>;

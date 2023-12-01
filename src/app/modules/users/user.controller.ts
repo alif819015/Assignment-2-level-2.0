@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
-// import userValidationSchema from './user.validation';
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -59,8 +58,28 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const userIdConvert = parseInt(userId);
+    const result = await UserServices.deleteUserFromDB(userIdConvert);
+    res.status(200).json({
+      success: true,
+      message: 'User Deleted Successfully',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message: err.message || 'User not found!',
+      error: err,
+    });
+  }
+};
+
 export const UserController = {
   createUser,
   getAllUsers,
   getSingleUser,
+  deleteUser,
 };

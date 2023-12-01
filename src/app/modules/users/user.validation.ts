@@ -37,6 +37,7 @@ const userValidationSchema = z.object({
       quantity: z.number(),
     }),
   ),
+  isDeleted: z.boolean(),
 });
 
 export default userValidationSchema;

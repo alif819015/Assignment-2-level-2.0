@@ -7,12 +7,6 @@ const createUserIntoDb = async (userData: TUser) => {
   }
   const result = await User.create(userData);
 
-  // return result;
-  // const user = new User(userData);
-  // if (await user.isUserExists(userData.userId)) {
-  //   throw new Error('User Already Exists!');
-  // }
-  // const result = await user.save();
   return result;
 };
 
@@ -22,7 +16,13 @@ const getAllUsersFromDB = async () => {
 };
 
 const getSingleUserFromDB = async (userId: number) => {
-  const result = await User.findOne({ userId });
+  // const result = await User.findOne({ userId });
+  const result = await User.aggregate([{ $match: { userId: userId } }]);
+  return result;
+};
+
+const deleteUserFromDB = async (userId: number) => {
+  const result = await User.updateOne({ userId }, { isDeleted: true });
   return result;
 };
 
@@ -30,4 +30,5 @@ export const UserServices = {
   createUserIntoDb,
   getAllUsersFromDB,
   getSingleUserFromDB,
+  deleteUserFromDB,
 };

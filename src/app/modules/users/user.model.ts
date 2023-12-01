@@ -13,7 +13,6 @@ const userSchema = new Schema<TUser, UserModel>({
   password: {
     type: String,
     required: [true, 'ID is required'],
-    unique: true,
     maxlength: [20, 'Password can not be more then 20 character'],
   },
   userId: {
@@ -59,6 +58,10 @@ const userSchema = new Schema<TUser, UserModel>({
   orders: {
     type: [{ productName: String, price: Number, quantity: Number }],
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // pre save middleware hook
@@ -74,18 +77,31 @@ userSchema.pre('save', async function (next) {
 });
 
 // post save middleware hook
-userSchema.post('save', function () {
-  console.log(this, 'post hook');
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+// Query middleware
+userSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+userSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+userSchema.pre('aggregate', function (next) {
+  // console.log(this.pipeline());
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
 });
 
 userSchema.statics.isUserExists = async function (userId: number) {
   const existingUser = await User.findOne({ userId });
   return existingUser;
 };
-
-// userSchema.methods.isUserExists = async function (userId: number) {
-//   const existingUser = await User.findOne({ userId });
-//   return existingUser;
-// };
 
 export const User = model<TUser, UserModel>('User', userSchema);
