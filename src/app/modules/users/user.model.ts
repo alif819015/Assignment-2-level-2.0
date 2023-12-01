@@ -1,12 +1,20 @@
 import { Schema, model } from 'mongoose';
-import { User } from './user.interface';
+import { TUser, UserModel } from './user.interface';
 import validator from 'validator';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<TUser, UserModel>({
   id: {
     type: String,
     required: [true, 'ID is required'],
     unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, 'ID is required'],
+    unique: true,
+    maxlength: [20, 'Password can not be more then 20 character'],
   },
   userId: {
     type: Number,
@@ -53,4 +61,31 @@ const userSchema = new Schema<User>({
   },
 });
 
-export const UserModel = model<User>('User', userSchema);
+// pre save middleware hook
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  // hashing password
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+// post save middleware hook
+userSchema.post('save', function () {
+  console.log(this, 'post hook');
+});
+
+userSchema.statics.isUserExists = async function (userId: number) {
+  const existingUser = await User.findOne({ userId });
+  return existingUser;
+};
+
+// userSchema.methods.isUserExists = async function (userId: number) {
+//   const existingUser = await User.findOne({ userId });
+//   return existingUser;
+// };
+
+export const User = model<TUser, UserModel>('User', userSchema);
