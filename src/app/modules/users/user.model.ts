@@ -5,11 +5,6 @@ import bcrypt from 'bcrypt';
 import config from '../../config';
 
 const userSchema = new Schema<TUser, UserModel>({
-  id: {
-    type: String,
-    required: [true, 'ID is required'],
-    unique: true,
-  },
   password: {
     type: String,
     required: [true, 'ID is required'],
@@ -44,12 +39,7 @@ const userSchema = new Schema<TUser, UserModel>({
     },
   },
   isActive: { type: Boolean, required: true },
-  hobbies: {
-    type: String,
-    enum: {
-      values: ['Sports', 'Cording'],
-    },
-  },
+  hobbies: { type: [String], required: true },
   address: {
     street: { type: String, required: true },
     city: { type: String, required: true },
@@ -78,7 +68,9 @@ userSchema.pre('save', async function (next) {
 
 // post save middleware hook
 userSchema.post('save', function (doc, next) {
+  // doc.password = '';
   doc.password = '';
+
   next();
 });
 

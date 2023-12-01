@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 const userValidationSchema = z.object({
-  id: z.string().min(1),
   password: z.string().max(20),
   userId: z.number().min(1),
   username: z
@@ -22,9 +21,7 @@ const userValidationSchema = z.object({
   gender: z.enum(['male', 'female']),
   email: z.string().email({ message: 'Invalid email format' }).min(1),
   isActive: z.boolean(),
-  hobbies: z
-    .enum(['Sports', 'Cording'])
-    .refine(Boolean, { message: 'Hobbies is required' }),
+  hobbies: z.array(z.string()),
   address: z.object({
     street: z.string().min(1),
     city: z.string().min(1),

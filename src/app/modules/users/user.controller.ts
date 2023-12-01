@@ -4,14 +4,14 @@ import { UserServices } from './user.service';
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user: userData } = req.body;
-    // const zodData = userValidationSchema.parse(userData);
-
     const result = await UserServices.createUserIntoDb(userData);
+    const userResponse = result.toJSON();
+    delete userResponse.password;
 
     res.status(200).json({
       success: true,
-      message: 'User is Created Successfully',
-      data: result,
+      message: 'User created successfully!',
+      data: userResponse,
     });
   } catch (err: any) {
     res.status(404).json({

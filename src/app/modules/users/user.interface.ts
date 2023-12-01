@@ -7,7 +7,6 @@ export type TOrders = {
 };
 
 export type TUser = {
-  id: string;
   password: string;
   userId: number;
   username: string;
@@ -19,7 +18,7 @@ export type TUser = {
   gender: 'male' | 'female';
   email: string;
   isActive: boolean;
-  hobbies: 'Sports' | 'Cording';
+  hobbies: string[];
   address: {
     street: string;
     city: string;
