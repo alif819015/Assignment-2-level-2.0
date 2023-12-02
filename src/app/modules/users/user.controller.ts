@@ -77,9 +77,48 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const userIdConvert = parseInt(userId);
+    const updatedUserData = req.body;
+
+    // Check if the user exists
+    const existingUser = await UserServices.getSingleUserFromDB(userIdConvert);
+    if (!existingUser) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found!',
+      });
+    }
+
+    // Update user data
+    const updatedUser = await UserServices.updateUserFromDB(
+      Number(userId),
+      updatedUserData,
+    );
+
+    const userResponse = updatedUser.toJSON();
+    delete userResponse.password;
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      data: userResponse,
+    });
+  } catch (err: any) {
+    res.status(404).json({
+      success: false,
+      message: err.message || 'Something went wrong',
+      error: err,
+    });
+  }
+};
+
 export const UserController = {
   createUser,
   getAllUsers,
   getSingleUser,
   deleteUser,
+  updateUser,
 };
