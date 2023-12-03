@@ -1,5 +1,5 @@
 import { TUser } from './user.interface';
-import { User } from './user.model';
+import { User, Order, Product } from './user.model';
 
 const createUserIntoDb = async (userData: TUser) => {
   if (await User.isUserExists(userData.userId)) {
@@ -50,10 +50,43 @@ const deleteUserFromDB = async (userId: number) => {
   return result;
 };
 
+const addToProductInOrder = async (
+  userId: number,
+  newProduct: Product,
+): Promise<TUser | null> => {
+  try {
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (!user.orders) {
+      user.orders = [];
+    }
+
+    const newOrder: Order = {
+      products: [newProduct],
+      orderDate: new Date(),
+    };
+
+    user.orders.push(newOrder);
+
+    // Save the updated user
+    const updatedUser = await user.save();
+
+    return updatedUser;
+  } catch (error) {
+    console.error('Error adding product to order:', error);
+    throw error;
+  }
+};
+
 export const UserServices = {
   createUserIntoDb,
   getAllUsersFromDB,
   getSingleUserFromDB,
   deleteUserFromDB,
   updateUserFromDB,
+  addToProductInOrder,
 };
