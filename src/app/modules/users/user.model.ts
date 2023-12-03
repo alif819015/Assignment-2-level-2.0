@@ -8,7 +8,6 @@ const userSchema = new Schema<TUser, UserModel>({
   password: {
     type: String,
     required: [true, 'ID is required'],
-    maxlength: [20, 'Password can not be more then 20 character'],
   },
   userId: {
     type: Number,

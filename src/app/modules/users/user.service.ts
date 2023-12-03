@@ -21,13 +21,32 @@ const getSingleUserFromDB = async (userId: number) => {
   return result;
 };
 
-const deleteUserFromDB = async (userId: number) => {
-  const result = await User.updateOne({ userId }, { isDeleted: true });
-  return result;
+const updateUserFromDB = async (
+  userId: number,
+  updatedUserData: Partial<TUser>,
+): Promise<TUser | null> => {
+  try {
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (updatedUserData.fullName) {
+      user.fullName = { ...user.fullName, ...updatedUserData.fullName };
+    }
+
+    const updatedUser = await user.save();
+
+    return updatedUser;
+  } catch (error) {
+    console.error('Updating user not found:', error);
+    throw error;
+  }
 };
 
-const updateUserFromDB = async (userId: number) => {
-  const result = await User.updateOne({ userId });
+const deleteUserFromDB = async (userId: number) => {
+  const result = await User.updateOne({ userId }, { isDeleted: true });
   return result;
 };
 
