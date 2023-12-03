@@ -1,6 +1,7 @@
 import { Model } from 'mongoose';
 
 export type TOrders = {
+  products: any;
   productName: string;
   price: number;
   quantity: number;

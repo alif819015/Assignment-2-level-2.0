@@ -1,5 +1,5 @@
 import { TUser } from './user.interface';
-import { User, Order, Product } from './user.model';
+import { User } from './user.model';
 
 const createUserIntoDb = async (userData: TUser) => {
   if (await User.isUserExists(userData.userId)) {
@@ -50,10 +50,7 @@ const deleteUserFromDB = async (userId: number) => {
   return result;
 };
 
-const addToProductInOrder = async (
-  userId: number,
-  newProduct: Product,
-): Promise<TUser | null> => {
+const addToProductInOrder = async (userId: number, newProduct: any) => {
   try {
     const user = await User.findOne({ userId });
 
@@ -65,19 +62,48 @@ const addToProductInOrder = async (
       user.orders = [];
     }
 
-    const newOrder: Order = {
-      products: [newProduct],
-      orderDate: new Date(),
+    const productToAdd = {
+      productName: newProduct.productName,
+      price: newProduct.price,
+      quantity: newProduct.quantity,
+    };
+
+    const newOrder: Orders = {
+      products: [
+        ...user.orders.flatMap((order) => order.products),
+        productToAdd,
+      ],
     };
 
     user.orders.push(newOrder);
 
-    // Save the updated user
-    const updatedUser = await user.save();
+    await user.save();
 
-    return updatedUser;
+    return newOrder;
   } catch (error) {
-    console.error('Error adding product to order:', error);
+    console.error('User not found:', error);
+    throw error;
+  }
+};
+
+const getAllOrders = async (userId: number): Promise<Order[] | null> => {
+  try {
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const orders =
+      user.orders?.map((order) => ({
+        productName: order.productName,
+        price: order.price,
+        quantity: order.quantity,
+      })) || [];
+
+    return orders;
+  } catch (error) {
+    console.error('User not found:', error);
     throw error;
   }
 };
@@ -89,4 +115,5 @@ export const UserServices = {
   deleteUserFromDB,
   updateUserFromDB,
   addToProductInOrder,
+  getAllOrders,
 };
