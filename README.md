@@ -14,7 +14,9 @@
 
 **First you need to install type script and mongo DB with Mongoose and node JS also need Express JS and cross**
 
-**make sure before installing dev dependency.**
+**make sure before installing dev dependency like(-D).**
+
+    npm install -D typescript
 
 ![image](https://github.com/alif819015/Assignment-2-level-2.0/assets/86307047/199a8445-c91f-4122-8244-0412c8de3035)
 
