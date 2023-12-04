@@ -20,8 +20,8 @@ const getAllUsersFromDB = async () => {
 // get a single user from database
 const getSingleUserFromDB = async (userId: number) => {
   const result = await User.findOne({ userId });
-  const result1 = await User.aggregate([{ $match: { userId: userId } }]);
-  return { result, result1 };
+  // const result1 = await User.aggregate([{ $match: { userId: userId } }]);
+  return { result };
 };
 
 // update user from database
@@ -55,7 +55,10 @@ const deleteUserFromDB = async (userId: number) => {
   return result;
 };
 
-const addToProductInOrder = async (userId: number, newProduct: any) => {
+const addToProductInOrder = async (
+  userId: number,
+  newProduct: any,
+): Promise<Order | null> => {
   try {
     const user = await User.findOne({ userId });
 
@@ -92,7 +95,7 @@ const addToProductInOrder = async (userId: number, newProduct: any) => {
 };
 
 // get all product orders from database
-const getAllOrders = async (userId: number) => {
+const getAllOrders = async (userId: number): Promise<Order[] | null> => {
   try {
     const user = await User.findOne({ userId });
 
