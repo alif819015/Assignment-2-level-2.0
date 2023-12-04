@@ -1,6 +1,7 @@
 import { TUser } from './user.interface';
 import { User } from './user.model';
 
+// Creating users in the database
 const createUserIntoDb = async (userData: TUser) => {
   if (await User.isUserExists(userData.userId)) {
     throw new Error('User Already Exists!');
@@ -10,17 +11,20 @@ const createUserIntoDb = async (userData: TUser) => {
   return result;
 };
 
+// get all users from database
 const getAllUsersFromDB = async () => {
   const result = await User.find();
   return result;
 };
 
+// get a single user from database
 const getSingleUserFromDB = async (userId: number) => {
   const result = await User.findOne({ userId });
-  // const result = await User.aggregate([{ $match: { userId: userId } }]);
-  return result;
+  const result1 = await User.aggregate([{ $match: { userId: userId } }]);
+  return { result, result1 };
 };
 
+// update user from database
 const updateUserFromDB = async (
   userId: number,
   updatedUserData: Partial<TUser>,
@@ -45,6 +49,7 @@ const updateUserFromDB = async (
   }
 };
 
+// delete a single user from database
 const deleteUserFromDB = async (userId: number) => {
   const result = await User.updateOne({ userId }, { isDeleted: true });
   return result;
@@ -72,6 +77,7 @@ const addToProductInOrder = async (userId: number, newProduct: any) => {
 
     await user.save();
 
+    // single user update from database
     const updatedOrders = user.orders.map((order) => ({
       productName: order.productName,
       price: order.price,
@@ -85,7 +91,8 @@ const addToProductInOrder = async (userId: number, newProduct: any) => {
   }
 };
 
-const getAllOrders = async (userId: number): Promise<Order[] | null> => {
+// get all product orders from database
+const getAllOrders = async (userId: number) => {
   try {
     const user = await User.findOne({ userId });
 
@@ -107,6 +114,28 @@ const getAllOrders = async (userId: number): Promise<Order[] | null> => {
   }
 };
 
+// calculate the total order price
+const calculateTotalPrice = async (userId: number) => {
+  try {
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const totalPrice =
+      user.orders?.reduce(
+        (acc, order) => acc + order.price * order.quantity,
+        0,
+      ) || 0;
+
+    return totalPrice;
+  } catch (error) {
+    console.error('User not found:', error);
+    throw error;
+  }
+};
+
 export const UserServices = {
   createUserIntoDb,
   getAllUsersFromDB,
@@ -115,4 +144,5 @@ export const UserServices = {
   updateUserFromDB,
   addToProductInOrder,
   getAllOrders,
+  calculateTotalPrice,
 };

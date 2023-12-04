@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { UserServices } from './user.service';
 
+// create user controller
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user: userData } = req.body;
@@ -25,6 +26,7 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
+// get all users controller
 const getAllUsers = async (req: Request, res: Response) => {
   try {
     const result = await UserServices.getAllUsersFromDB();
@@ -45,6 +47,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+// get single user controller
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -67,6 +70,7 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// update single user controller
 const updateUser = async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.userId, 10);
@@ -92,6 +96,7 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
+// delete single user controller
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -114,6 +119,7 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+// add product to the order controller
 const addProductToOrder = async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.userId, 10);
@@ -141,6 +147,7 @@ const addProductToOrder = async (req: Request, res: Response) => {
   }
 };
 
+// get all order controller
 const getAllOrders = async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.userId, 10);
@@ -164,6 +171,32 @@ const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
+// calculate total product price controller
+const totalPriceOfProduct = async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+
+    const totalPrice = await UserServices.calculateTotalPrice(userId);
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: {
+        totalPrice,
+      },
+    });
+  } catch (error: any) {
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    });
+  }
+};
+
 export const UserController = {
   createUser,
   getAllUsers,
@@ -172,4 +205,5 @@ export const UserController = {
   updateUser,
   addProductToOrder,
   getAllOrders,
+  totalPriceOfProduct,
 };
