@@ -62,24 +62,23 @@ const addToProductInOrder = async (userId: number, newProduct: any) => {
       user.orders = [];
     }
 
-    const productToAdd = {
+    const addToProduct: any = {
       productName: newProduct.productName,
       price: newProduct.price,
       quantity: newProduct.quantity,
     };
 
-    const newOrder: Orders = {
-      products: [
-        ...user.orders.flatMap((order) => order.products),
-        productToAdd,
-      ],
-    };
-
-    user.orders.push(newOrder);
+    user.orders.push(addToProduct);
 
     await user.save();
 
-    return newOrder;
+    const updatedOrders = user.orders.map((order) => ({
+      productName: order.productName,
+      price: order.price,
+      quantity: order.quantity,
+    }));
+
+    return updatedOrders;
   } catch (error) {
     console.error('User not found:', error);
     throw error;
