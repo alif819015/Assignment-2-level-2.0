@@ -55,10 +55,7 @@ const deleteUserFromDB = async (userId: number) => {
   return result;
 };
 
-const addToProductInOrder = async (
-  userId: number,
-  newProduct: any,
-): Promise<Order | null> => {
+const addToProductInOrder = async (userId: number, newProduct: any) => {
   try {
     const user = await User.findOne({ userId });
 
@@ -95,7 +92,7 @@ const addToProductInOrder = async (
 };
 
 // get all product orders from database
-const getAllOrders = async (userId: number): Promise<Order[] | null> => {
+const getAllOrders = async (userId: number) => {
   try {
     const user = await User.findOne({ userId });
 
