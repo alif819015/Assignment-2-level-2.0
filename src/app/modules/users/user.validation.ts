@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 const userValidationSchema = z.object({
-  password: z.string().min(1),
   userId: z.number().min(1),
   username: z
     .string()
     .min(1)
     .refine(Boolean, { message: 'Username is required' }),
+  password: z.string().min(1),
   fullName: z.object({
     firstName: z
       .string()

@@ -8,15 +8,14 @@ export type TOrders = {
 };
 
 export type TUser = {
-  password: string;
   userId: number;
   username: string;
+  password: string;
   fullName: {
     firstName: string;
     lastName: string;
   };
   age: number;
-  gender: 'male' | 'female';
   email: string;
   isActive: boolean;
   hobbies: string[];

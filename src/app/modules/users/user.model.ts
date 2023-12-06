@@ -5,19 +5,20 @@ import bcrypt from 'bcrypt';
 import config from '../../config';
 
 const userSchema = new Schema<TUser, UserModel>({
-  password: {
-    type: String,
-    required: [true, 'ID is required'],
-  },
   userId: {
     type: Number,
     required: [true, 'ID is required'],
     unique: true,
   },
+
   username: {
     type: String,
     required: [true, 'Username is required'],
     unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, 'ID is required'],
   },
   fullName: {
     firstName: {
@@ -27,7 +28,6 @@ const userSchema = new Schema<TUser, UserModel>({
     lastName: { type: String, required: true },
   },
   age: { type: Number, required: true },
-  gender: { type: String, enum: ['male', 'female'], required: true },
   email: {
     type: String,
     required: true,

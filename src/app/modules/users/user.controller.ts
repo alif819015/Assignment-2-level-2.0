@@ -4,7 +4,7 @@ import { UserServices } from './user.service';
 // create user controller
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const userData = req.body;
     const result = await UserServices.createUserIntoDb(userData);
     const userResponse = result.toJSON();
     delete userResponse.password;
